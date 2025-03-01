@@ -1,0 +1,144 @@
+{% extends 'base.html' %} {% block content %} {% include 'navigation.html' %}
+<div class="mx-auto grid max-w-7xl grid-cols-2 grid-rows-2 gap-6 p-6">
+  <!-- Profile Information -->
+  <div class="rounded-lg border border-stone-700 p-6">
+    <h2 class="mb-6 text-lg font-semibold">Profile Information</h2>
+
+    <div class="mb-6 flex items-center gap-4">
+      <!-- Teacher Profile Picture -->
+      <img
+        src="{% if user.profile_picture %}{{ user.profile_picture.url }}{% else %}https://ui-avatars.com/api/?name={{ user.first_name }}+{{ user.last_name }}{% endif %}"
+        alt="Profile Picture"
+        class="h-24 w-24 rounded-full object-cover"
+      />
+      <!-- Teacher Full Name and Username -->
+      <div>
+        <h3 class="text-xl font-medium">{{ user.get_full_name }}</h3>
+        <p class="text-stone-400">@{{ user.username }}</p>
+      </div>
+    </div>
+
+    <div class="space-y-4">
+      <!-- Teacher Biography -->
+      <div>
+        <p class="font-semibold">Biography</p>
+        <p class="text-stone-400">{{ user.biography }}</p>
+      </div>
+
+      <!-- Teacher Email -->
+      <div>
+        <p class="font-semibold">Email</p>
+        <p class="text-stone-400">{{ user.email }}</p>
+      </div>
+
+      <!-- Teacher ID -->
+      <div>
+        <p class="font-semibold">Teacher ID</p>
+        <p class="text-stone-400">{{ user.id }}</p>
+      </div>
+
+      <!-- Teacher Date Joined -->
+      <div>
+        <p class="font-semibold">Date Joined</p>
+        <p class="text-stone-400">{{ user.date_joined|date:"F j, Y" }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="rounded-lg border border-stone-700 p-6">
+    <h2 class="mb-6 text-lg font-semibold">My Courses</h2>
+
+    <div class="flex flex-col gap-4">
+      {% for course in courses %}
+      <!-- Course Title -->
+      <div class="flex items-center justify-between">
+        <a href="/course/{{ course.id }}/" class="hover:underline"
+          >{{ course.title }}</a
+        >
+      </div>
+      {% empty %}
+      <!-- No courses -->
+      <p class="text-center text-stone-400">No courses</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Status Updates -->
+  <div class="rounded-lg border border-stone-700">
+    <h2 class="p-6 text-lg font-semibold">Status Updates</h2>
+
+    <div class="divide-y divide-stone-800">
+      {% for status_update in status_updates %}
+      <!-- Status Update -->
+      <div class="mb-3 px-6 pb-3">
+        <div class="mb-2 flex items-center justify-between">
+          <div>
+            <!-- Teacher Full Name -->
+            <span class="font-medium"
+              >{{ status_update.user.get_full_name }}</span
+            >
+            <!-- Teacher Username -->
+            <span class="text-sm text-stone-400"
+              >@{{ status_update.user.username }}</span
+            >
+          </div>
+        </div>
+
+        <!-- Status Update Content -->
+        <p class="mb-2">{{ status_update.content }}</p>
+
+        <!-- Status Update Timestamp -->
+        <span class="text-sm text-stone-400">
+          {{ status_update.created_at|timesince }} ago
+        </span>
+      </div>
+      {% empty %}
+      <div class="p-6">
+        <p class="text-center text-stone-400">No status updates</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- My Students -->
+  <div class="rounded-lg border border-stone-700">
+    <div class="flex items-center justify-between p-6">
+      <h2 class="text-lg font-semibold">My Students</h2>
+    </div>
+
+    <div class="flex flex-col divide-y divide-stone-700">
+      {% for course in courses %}
+      <!-- Course Title -->
+      <div class="mb-3 px-6 pb-3">
+        <h3 class="mb-4 font-semibold">{{ course.title }}</h3>
+        <div class="flex flex-col gap-2">
+          {% for student in course.students.all %}
+          <!-- Students -->
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <!-- Student Full Name -->
+              <a
+                href="/home/{{student.username}}"
+                class="cursor-pointer hover:underline"
+                >{{ student.get_full_name }}</a
+              >
+              <!-- Student Username -->
+              <span class="text-sm text-stone-400"
+                >@{{ student.username }}</span
+              >
+            </div>
+          </div>
+          {% empty %}
+          <!-- No students -->
+          <div class="text-stone-400">No students</div>
+          {% endfor %}
+        </div>
+      </div>
+      {% empty %}
+      <!-- No courses -->
+      <div class="p-6 text-center text-stone-400">No courses</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

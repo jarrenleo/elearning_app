@@ -1,0 +1,34 @@
+{% extends "base.html" %} {% block content %} {% include 'navigation.html' %}
+<div class="mx-auto max-w-4xl p-6">
+  <h2 class="mb-6 text-2xl font-bold">View Feedback</h2>
+
+  {% if feedback_list %}
+  <div class="space-y-6">
+    {% for feedback in feedback_list %}
+    <div class="rounded-lg border border-stone-700 bg-stone-950 p-6">
+      <div class="mb-2 flex items-start justify-between">
+        <h3 class="text-lg font-semibold">{{ feedback.subject }}</h3>
+        <span class="text-sm text-stone-400"
+          >{{ feedback.created_at|date:"M d, Y" }}</span
+        >
+      </div>
+
+      <p class="mb-4">{{ feedback.message }}</p>
+
+      <div class="flex items-center gap-4 text-sm text-stone-400">
+        <p>Course: {{ feedback.course.title }}</p>
+        <p>Student: {{ feedback.student.get_full_name }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div
+    class="rounded-lg border border-stone-700 bg-stone-950 p-6 text-center text-stone-400"
+  >
+    <p>No feedback received</p>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

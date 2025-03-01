@@ -1,0 +1,101 @@
+<div class="relative" id="dropdownButton">
+  <!-- User Avatar -->
+  <div onclick="toggleDropdown()" class="h-8 w-8">
+    <img
+      width="32"
+      height="32"
+      src="{% if request.user.profile_picture %}{{ request.user.profile_picture.url }}{% else %}https://ui-avatars.com/api/?name={{ request.user.first_name }}+{{ request.user.last_name }}{% endif %}"
+      alt="User Avatar"
+      class="h-full w-full cursor-pointer rounded-full border border-stone-700 object-cover"
+    />
+  </div>
+
+  {% if unread_notifications_count > 0 %}
+  <div
+    class="absolute right-[-4px] bottom-[-4px] flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs font-semibold"
+  >
+    {{ unread_notifications_count }}
+  </div>
+  {% endif %}
+
+  <!-- Dropdown Menu -->
+  <div
+    id="dropdownMenu"
+    class="absolute top-[42px] right-0 z-10 hidden rounded-lg border border-stone-800 bg-stone-950 text-sm text-stone-50"
+  >
+    <div class="border-b border-stone-800 px-3 py-2">
+      <p class="font-medium">{{ request.user.get_full_name }}</p>
+      <p class="text-stone-400">@{{request.user.username}}</p>
+    </div>
+
+    <div class="flex w-40 flex-col border-b border-stone-800">
+      <a href="/profile/" class="px-3 py-2 transition-colors hover:bg-stone-800"
+        >Profile</a
+      >
+      <a
+        href="/feedback/"
+        class="px-3 py-2 transition-colors hover:bg-stone-800"
+        >Feedback</a
+      >
+      <a
+        href="/notifications/"
+        class="px-3 py-2 transition-colors hover:bg-stone-800"
+      >
+        <div class="flex items-center justify-between">
+          <span>Notifications</span>
+          {% if unread_notifications_count > 0 %}
+          <div
+            class="flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs font-semibold"
+          >
+            {{ unread_notifications_count }}
+          </div>
+          {% endif %}
+        </div>
+      </a>
+    </div>
+
+    <!-- Logout Form -->
+    <form action="{% url 'accounts:logout' %}" method="post">
+      {% csrf_token %}
+      <button
+        type="submit"
+        class="flex w-full cursor-pointer items-center gap-2 rounded-b-lg p-2 px-3 py-2 font-semibold transition-colors hover:bg-stone-800"
+      >
+        Logout
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="stroke-stone-50"
+        >
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+          <polyline points="16 17 21 12 16 7" />
+          <line x1="21" x2="9" y1="12" y2="12" />
+        </svg>
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+  function toggleDropdown() {
+    const dropdownMenu = document.getElementById("dropdownMenu");
+    dropdownMenu.classList.toggle("hidden");
+  }
+
+  // Close dropdown when clicking outside
+  window.addEventListener("click", function (e) {
+    const dropdownMenu = document.getElementById("dropdownMenu");
+    const dropdownButton = document.getElementById("dropdownButton");
+
+    // Check if click is outside both the dropdown menu and button
+    if (!dropdownMenu.contains(e.target) && !dropdownButton.contains(e.target))
+      dropdownMenu.classList.add("hidden");
+  });
+</script>

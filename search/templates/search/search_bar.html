@@ -1,0 +1,39 @@
+<div class="relative">
+  <!-- Search Bar and Search Icon -->
+  <div class="flex items-center">
+    <!-- Use htmx to search for users -->
+    <!-- Search query is triggered on keyup after 300ms of inactivity -->
+    <!-- Search results are displayed in the searchResults div -->
+    <input
+      type="text"
+      name="query"
+      placeholder="Search"
+      hx-get="{% url 'search:search' %}"
+      hx-trigger="keyup changed delay:300ms"
+      hx-target="#searchResults"
+      class="w-64 rounded-lg border border-stone-700 bg-stone-950 px-3 py-2 text-sm transition-colors outline-none focus:border-stone-50"
+    />
+    <button class="absolute right-3 text-stone-400">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="11" cy="11" r="8" />
+        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Search Results -->
+  <div
+    id="searchResults"
+    class="absolute mt-2 max-h-64 w-64 overflow-y-auto rounded-lg border border-stone-800 bg-stone-950"
+  ></div>
+</div>

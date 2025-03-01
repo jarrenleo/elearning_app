@@ -1,0 +1,44 @@
+{% extends "base.html" %} {% block content %} {% include 'navigation.html' %}
+
+<div class="mx-auto max-w-xl p-6">
+  <div class="rounded-lg border border-stone-700 p-6">
+    <h1 class="mb-4 text-xl font-bold">Create Course</h1>
+    <!-- Course Creation Form -->
+    <form method="POST" class="space-y-4 text-sm">
+      {% csrf_token %}
+
+      <!-- Course Title -->
+      <div>
+        <label for="title" class="font-semibold">Title</label>
+        <input
+          type="text"
+          name="title"
+          id="title"
+          required
+          class="mt-2 w-full rounded-lg border border-stone-700 px-3 py-2 transition-colors focus:border-stone-50 focus:outline-none"
+        />
+      </div>
+
+      <!-- Course Description -->
+      <div>
+        <label for="description" class="font-semibold">Description</label>
+        <textarea
+          name="description"
+          id="description"
+          rows="3"
+          required
+          class="mt-2 w-full rounded-lg border border-stone-700 px-3 py-2 transition-colors focus:border-stone-50 focus:outline-none"
+        ></textarea>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="w-full cursor-pointer rounded-lg bg-stone-50 px-3 py-2 font-semibold text-stone-950 transition-colors hover:bg-stone-200"
+      >
+        Create
+      </button>
+    </form>
+  </div>
+</div>
+{% include "status_message.html" %} {% endblock %}

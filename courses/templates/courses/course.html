@@ -1,0 +1,60 @@
+{% extends 'base.html' %} 
+{% block content %} 
+{% include 'navigation.html' %}
+
+<div class="mx-auto max-w-7xl p-6">
+  <!-- Course Header -->
+  <div class="mb-8">
+    <h1 class="text-2xl font-bold">{{ course.title }}</h1>
+    <p class="mt-2 text-stone-400">{{ course.description }}</p>
+  </div>
+
+  <!-- Topics List -->
+  <div class="flex flex-col gap-6">
+    {% for topic in topics %}
+    <div class="rounded-lg border border-stone-700 bg-stone-950 p-6">
+      <!-- Topic Title and Deadline -->
+      <div class="mb-4 flex items-center justify-between">
+        <h2 class="text-xl font-semibold">{{ topic.title }}</h2>
+        <span class="text-sm text-stone-400">Due: {{ topic.deadline|date:"F j, Y" }}</span>
+      </div>
+
+      <!-- Topic Content -->
+      <div class="prose prose-invert mb-6">
+        {{ topic.content|linebreaks }}
+      </div>
+
+      <!-- Topic Attachments -->
+      {% if topic.attachments.all %}
+      <div class="mt-4">
+        <h3 class="mb-2 text-sm font-medium text-stone-400">Attachments</h3>
+        <div class="flex flex-wrap gap-2">
+          {% for attachment in topic.attachments.all %}
+          <a 
+            href="{{ attachment.file.url }}" 
+            target="_blank"
+            class="flex items-center gap-2 rounded-lg border border-stone-700 bg-stone-900 px-3 py-2 text-sm hover:bg-stone-800"
+          >
+            <!-- File Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file">
+              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            
+            <!-- File Name -->
+            <span>{{ attachment.file_name }}</span>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+    {% empty %}
+    <div class="rounded-lg border border-stone-700 bg-stone-950 p-6 text-center text-stone-400">
+      No topics available for this course yet.
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

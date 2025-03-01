@@ -1,0 +1,104 @@
+<div class="rounded-lg border border-stone-700 bg-stone-950">
+  <h2 class="px-6 pt-6 text-lg font-semibold">Status Updates</h2>
+  <!-- Create Form -->
+  <form
+    method="POST"
+    action="{% url 'status_updates:create_status_update' %}"
+    class="space-y-4 border-b-[1px] border-stone-700 p-6"
+  >
+    {% csrf_token %}
+    <div class="flex gap-4">
+      <!-- User Avatar -->
+      <img
+        src="{% if request.user.profile_picture %}{{ request.user.profile_picture.url }}{% else %}https://ui-avatars.com/api/?name={{ request.user.first_name }}+{{ request.user.last_name }}{% endif %}"
+        alt="Profile Picture"
+        class="h-12 w-12 rounded-full object-cover"
+      />
+
+      <!-- Status Input -->
+      <div class="mt-2 flex-1">
+        <label for="content"></label>
+        <textarea
+          name="content"
+          id="content"
+          rows="3"
+          class="w-full placeholder:text-stone-400 focus:outline-none"
+          placeholder="What is happening?!"
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- Post Button -->
+    <div class="flex justify-end">
+      <button
+        type="submit"
+        class="cursor-pointer rounded-lg bg-stone-50 px-6 py-2 text-sm font-medium text-stone-950 transition-colors hover:bg-stone-200"
+      >
+        Post
+      </button>
+    </div>
+  </form>
+
+  <!-- Status Updates List -->
+  <div class="divide-y divide-stone-800">
+    {% for status_update in status_updates %}
+    <div class="p-6">
+      <!-- User Full Name, Username -->
+      <div class="mb-2 flex items-center justify-between">
+        <div>
+          <span class="font-medium"
+            >{{ status_update.user.get_full_name }}</span
+          >
+          <span class="text-sm text-stone-400"
+            >@{{ status_update.user.username }}</span
+          >
+        </div>
+
+        <!-- Delete Button -->
+        <form
+          method="POST"
+          action="{% url 'status_updates:delete_status_update' status_update.id %}"
+        >
+          {% csrf_token %}
+          <button
+            type="submit"
+            class="flex cursor-pointer items-center transition-colors hover:text-stone-400"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-trash-2"
+            >
+              <path d="M3 6h18" />
+              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+              <line x1="10" x2="10" y1="11" y2="17" />
+              <line x1="14" x2="14" y1="11" y2="17" />
+            </svg>
+          </button>
+        </form>
+      </div>
+
+      <!-- Content -->
+      <p class="mb-2">{{ status_update.content }}</p>
+
+      <!-- Timestamp -->
+      <span class="text-sm text-stone-400">
+        {{ status_update.created_at|timesince }} ago
+      </span>
+    </div>
+    {% empty %}
+    <div class="p-6">
+      <!-- No Status Updates -->
+      <p class="text-center text-stone-400">No status updates</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>

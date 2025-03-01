@@ -1,0 +1,108 @@
+{% extends 'base.html' %} {% block content %} {% include 'navigation.html' %}
+<div class="mx-auto grid max-w-7xl grid-cols-2 grid-rows-2 gap-6 p-6">
+  <!-- Profile Information -->
+  <div class="rounded-lg border border-stone-700 p-6">
+    <h2 class="mb-6 text-lg font-semibold">Profile Information</h2>
+
+    <div class="mb-6 flex items-center gap-4">
+      <!-- Student Profile Picture -->
+      <img
+        src="{% if user.profile_picture %}{{ user.profile_picture.url }}{% else %}https://ui-avatars.com/api/?name={{ user.first_name }}+{{ user.last_name }}{% endif %}"
+        alt="Profile Picture"
+        class="h-24 w-24 rounded-full object-cover"
+      />
+      <!-- Student Full Name and Username -->
+      <div>
+        <h3 class="text-xl font-medium">{{ user.get_full_name }}</h3>
+        <p class="text-stone-400">@{{ user.username }}</p>
+      </div>
+    </div>
+
+    <div class="space-y-4">
+      <!-- Student Biography -->
+      <div>
+        <p class="font-semibold">Biography</p>
+        <p class="text-stone-400">{{ user.biography }}</p>
+      </div>
+
+      <!-- Student Email -->
+      <div>
+        <p class="font-semibold">Email</p>
+        <p class="text-stone-400">{{ user.email }}</p>
+      </div>
+
+      <!-- Student ID -->
+      <div>
+        <p class="font-semibold">Student ID</p>
+        <p class="text-stone-400">{{ user.id }}</p>
+      </div>
+
+      <!-- Student Date Joined -->
+      <div>
+        <p class="font-semibold">Date Joined</p>
+        <p class="text-stone-400">{{ user.date_joined|date:"F j, Y" }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Current Courses -->
+  <div class="rounded-lg border border-stone-700 p-6">
+    <h2 class="mb-6 text-lg font-semibold">Current Courses</h2>
+
+    <div class="flex flex-col gap-4">
+      {% for course in courses %}
+      <div class="flex items-center justify-between">
+        <!-- Course Title -->
+        <a href="/course/{{ course.id }}/" class="hover:underline"
+          >{{ course.title }}</a
+        >
+      </div>
+      {% empty %}
+      <!-- No courses -->
+      <p class="text-center text-stone-400">No courses</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Status Updates -->
+  <div class="rounded-lg border border-stone-700">
+    <h2 class="p-6 text-lg font-semibold">Status Updates</h2>
+
+    <div class="divide-y divide-stone-800">
+      {% for status_update in status_updates %}
+      <!-- Student Status Updates -->
+      <div class="mb-3 px-6 pb-3">
+        <div class="mb-2 flex items-center justify-between">
+          <div>
+            <!-- Student Full Name -->
+            <span class="font-medium"
+              >{{ status_update.user.get_full_name }}</span
+            >
+            <!-- Student Username -->
+            <span class="text-sm text-stone-400"
+              >@{{ status_update.user.username }}</span
+            >
+          </div>
+        </div>
+
+        <!-- Status Update Content -->
+        <p class="mb-2">{{ status_update.content }}</p>
+
+        <!-- Status Update Timestamp -->
+        <span class="text-sm text-stone-400">
+          {{ status_update.created_at|timesince }} ago
+        </span>
+      </div>
+      {% empty %}
+      <!-- No status updates -->
+      <div class="p-6">
+        <p class="text-center text-stone-400">No status updates</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Deadlines -->
+  <div>{% include 'courses/deadlines.html' %}</div>
+</div>
+{% endblock %}

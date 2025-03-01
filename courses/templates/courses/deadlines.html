@@ -1,0 +1,36 @@
+<div class="rounded-lg border border-stone-700 pb-3">
+  <h2 class="p-6 text-lg font-semibold">Deadlines</h2>
+
+  <div
+    class="flex max-h-[710px] flex-col gap-3 divide-y divide-stone-800 overflow-y-auto"
+  >
+    {% regroup deadlines by deadline|date:"F j, Y" as date_list %} 
+    {% for date_group in date_list %}
+    <div class="pb-3">
+      <!-- Date Group -->
+      <h3 class="mx-6 mb-4 font-semibold">{{ date_group.grouper }}</h3>
+
+      {% regroup date_group.list by deadline|date:"g:i A" as time_list %} 
+      {% for time_group in time_list %}
+      <div>
+        <!-- Time Group -->
+        <h4 class="mx-6 mb-2 font-semibold">{{ time_group.grouper }}</h4>
+        <div class="mx-6 flex flex-col gap-2">
+          {% for deadline in time_group.list %}
+          <div>
+            <!-- Topic Title -->
+            <h5>{{ deadline.title }}</h5>
+            <!-- Course Title -->
+            <p class="text-stone-400 text-sm">{{ deadline.course.title }}</p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% empty %}
+    <!-- No Upcoming Deadlines -->
+    <div class="p-6 text-center text-stone-400">No upcoming deadlines</div>
+    {% endfor %}
+  </div>
+</div>

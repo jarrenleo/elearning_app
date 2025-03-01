@@ -1,0 +1,45 @@
+{% extends 'base.html' %} {% block content %} {% include 'navigation.html' %}
+<div class="mx-auto max-w-xl p-6">
+  <h2 class="mb-6 text-xl font-bold">Enroll Courses</h2>
+  <div class="rounded-lg border border-stone-700 bg-stone-950">
+    <!-- Enroll Course Form -->
+    <form
+      method="POST"
+      action="{% url 'courses:enroll_course_view' %}"
+      class="flex flex-col gap-6 p-6"
+    >
+      {% csrf_token %} {% for course in courses %}
+      <div class="flex items-center justify-between">
+        <label class="flex items-center gap-6 hover:cursor-pointer">
+          <input
+            type="checkbox"
+            name="selected_courses"
+            value="{{ course.id }}"
+            class="h-10 w-10"
+          />
+          <div class="flex flex-col gap-1">
+            <!-- Course Title -->
+            <span class="font-semibold">{{ course.title }}</span>
+            <!-- Course Description -->
+            <span class="text-sm text-stone-400">{{ course.description }}</span>
+          </div>
+        </label>
+      </div>
+      {% empty %}
+      <!-- No Courses Available -->
+      <div class="flex items-center justify-center">
+        <span class="text-sm text-stone-400">No courses available</span>
+      </div>
+      {% endfor %} {% if courses %}
+      <!-- Enroll Button -->
+      <button
+        type="submit"
+        class="cursor-pointer rounded-lg bg-stone-50 px-3 py-2 text-sm font-semibold text-stone-950 transition-colors hover:bg-stone-200"
+      >
+        Enroll
+      </button>
+      {% endif %}
+    </form>
+  </div>
+</div>
+{% endblock %}
