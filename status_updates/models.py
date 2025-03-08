@@ -9,7 +9,6 @@ class StatusUpdate(models.Model):
         related_name="status_updates",
     )
     content = models.TextField()
-    edited = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

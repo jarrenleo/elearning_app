@@ -13,7 +13,7 @@ class Course(models.Model):
     )
     students = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
-        through="CourseRegistration",
+        through="CourseEnrolment",
         related_name="enrolled_courses",
         limit_choices_to={"role": "STUDENT"},
     )
@@ -21,16 +21,15 @@ class Course(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
-# Course registration model
-class CourseRegistration(models.Model):
+# Course enrolment model
+class CourseEnrolment(models.Model):
     student = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         limit_choices_to={"role": "STUDENT"},
     )
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    registered_at = models.DateTimeField(auto_now_add=True)
-    is_active = models.BooleanField(default=True)
+    enrolled_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ["student", "course"]

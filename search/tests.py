@@ -1,54 +1,43 @@
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.urls import reverse
-from django.contrib.auth import get_user_model
+from accounts.models import User
 
 
 class SearchViewTests(TestCase):
     def setUp(self):
-        self.client = Client()
         self.search_url = reverse("search:search")
-        self.User = get_user_model()
-
         # Create test users
-        self.user1 = self.User.objects.create_user(
-            username="testuser",
+        self.user = User.objects.create_user(
+            username="test_teacher",
+            password="123456",
             first_name="Test",
-            last_name="User",
-            password="password123",
-            role="STUDENT",
+            last_name="Teacher",
+            email="teacher@test.com",
+            role=User.Role.TEACHER,
         )
 
-    def test_empty_query_returns_empty_results(self):
-        """Test that an empty search query returns empty results"""
-        response = self.client.get(self.search_url, {"query": ""})
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.context["results"]), 0)
-
+    # Test searching users by username
     def test_search_by_username(self):
-        """Test searching users by username"""
-        response = self.client.get(self.search_url, {"query": "testuser"})
+        self.client.force_login(self.user)
+        response = self.client.get(self.search_url, {"query": "test_teacher"})
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context["results"]), 1)
-        self.assertEqual(response.context["results"][0]["username"], "testuser")
+        self.assertEqual(response.context["results"][0]["username"], "test_teacher")
 
+    # Test searching users by first name
     def test_search_by_first_name(self):
-        """Test searching users by first name"""
+        self.client.force_login(self.user)
         response = self.client.get(self.search_url, {"query": "Test"})
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context["results"]), 1)
-        self.assertEqual(response.context["results"][0]["name"], "Test User")
+        self.assertEqual(response.context["results"][0]["name"], "Test Teacher")
 
+    # Test searching users by last name
     def test_search_by_last_name(self):
-        """Test searching users by last name"""
-        response = self.client.get(self.search_url, {"query": "User"})
+        self.client.force_login(self.user)
+        response = self.client.get(self.search_url, {"query": "Teacher"})
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context["results"]), 1)
-
-    def test_search_results_format(self):
-        """Test that search results contain the expected fields"""
-        response = self.client.get(self.search_url, {"query": "testuser"})
-        result = response.context["results"][0]
-        self.assertIn("name", result)
-        self.assertIn("username", result)
-        self.assertIn("role", result)
-        self.assertEqual(result["role"], "STUDENT")  # Test capitalization

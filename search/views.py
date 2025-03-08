@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from django.db.models import Q
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def search_view(request):
     # Get the query from the request
     query = request.GET.get("query", "")

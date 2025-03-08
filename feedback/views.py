@@ -24,7 +24,7 @@ def feedback_view(request):
 
 
 @login_required
-def submit_feedback(request):
+def submit_feedback_view(request):
     # Get the course id, subject and message from the request
     course_id = request.POST.get("course")
     subject = request.POST.get("subject")
