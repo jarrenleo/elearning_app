@@ -26,6 +26,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "tailwind",
+    "theme",
     "accounts",
     "dashboard",
     "home",
@@ -47,7 +49,7 @@ MIDDLEWARE = [
 ]
 
 # CORS settings
-CORS_ALLOW_ALL_ORIGINS = True  # Only for development
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = "elearning.urls"
 
@@ -119,3 +121,9 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# TailwindCSS settings
+TAILWIND_APP_NAME = "theme"
+
+# Path to the npm executable (To install TailwindCSS)
+NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"
